@@ -18,6 +18,7 @@ import { Database } from "database.types";
 import { useEffect, useState } from "react";
 
 import "./app.css";
+import Header from "./components/layout/header";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -74,7 +75,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div className="flex flex-col h-screen mx-auto max-w-xl">
+          <Header />
+          {children}
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>
