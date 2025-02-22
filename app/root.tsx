@@ -16,7 +16,8 @@ import {
 } from "@supabase/auth-helpers-remix";
 import { Database } from "database.types";
 import { useEffect, useState } from "react";
-import "./tailwind.css";
+
+import "./app.css";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -91,6 +92,13 @@ export default function App() {
   );
 
   const serverAccessToken = session?.access_token;
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+
+    root.classList.remove("light", "dark");
+    root.classList.add("dark");
+  }, []);
 
   useEffect(() => {
     const {
