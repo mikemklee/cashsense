@@ -18,6 +18,11 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
       data: { user },
     } = await supabase.auth.getUser();
 
+    // check demo user
+    if (user?.email === "demo@cashsense.com") {
+      return redirect("/");
+    }
+
     const { error: insertError } = await supabase.from("categories").insert({
       id: uuid(),
       name: payload.name,
