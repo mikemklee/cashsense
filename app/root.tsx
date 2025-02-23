@@ -58,11 +58,24 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let avatarUrl;
+  if (user) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .single();
+    if (data) {
+      avatarUrl = data.avatar_url;
+    }
+  }
+
   return Response.json(
     {
       env,
       serverAccessToken: session?.access_token,
       user,
+      avatarUrl,
     },
     {
       headers: response.headers,

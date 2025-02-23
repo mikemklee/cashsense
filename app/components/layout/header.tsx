@@ -1,37 +1,10 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData, useSubmit } from "@remix-run/react";
-import { createServerClient } from "@supabase/auth-helpers-remix";
-import { PiggyBank } from "lucide-react";
+import { MousePointerClick } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const response = new Response();
-
-  const supabase = createServerClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
-    {
-      request,
-      response,
-    }
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return Response.json(
-    {
-      user,
-    },
-    {
-      headers: response.headers,
-    }
-  );
-};
+import { loader as rootLoader } from "~/root";
 
 function Header() {
-  const loaderData = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof rootLoader>();
   const submit = useSubmit();
 
   if (!loaderData?.user) return null;
@@ -42,7 +15,7 @@ function Header() {
         <Link to="/">
           <div className="flex items-center text-3xl font-display">
             Cashsense
-            <PiggyBank className="ml-2 mt-2" />
+            <MousePointerClick className="ml-2 mt-2" />
           </div>
         </Link>
       </div>
@@ -53,7 +26,7 @@ function Header() {
         }
         className="cursor-pointer"
       >
-        <AvatarImage src="https://lh3.googleusercontent.com/-KFSt35NjpxY/AAAAAAAAAAI/AAAAAAAAAAA/ALKGfknMyLoIN-2gxrsvd4INDZPQcIhSwA/photo.jpg?sz=46" />
+        <AvatarImage src={loaderData.avatarUrl} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
     </div>

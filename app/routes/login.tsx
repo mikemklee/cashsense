@@ -6,7 +6,7 @@ import {
   User,
 } from "@supabase/auth-helpers-remix";
 import type { Database } from "database.types";
-import { PiggyBank } from "lucide-react";
+import { MousePointerClick } from "lucide-react";
 import { useEffect } from "react";
 
 import { Button } from "~/components/ui/button";
@@ -54,8 +54,11 @@ export default function Index() {
     }
   }, [user, navigate]);
 
-  const handleAnonymousLogin = async () => {
-    const { error } = await supabase.auth.signInAnonymously();
+  const handleEmailLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: "demo@cashsense.com",
+      password: "12345",
+    });
 
     if (!error) {
       navigate("/");
@@ -68,12 +71,10 @@ export default function Index() {
     <div className="flex h-screen items-center justify-center flex-col gap-4">
       <div className="flex items-center text-3xl font-display">
         Cashsense
-        <PiggyBank className="ml-2 mt-2" />
+        <MousePointerClick className="ml-2 mt-2" />
       </div>
       <div className="flex flex-col items-center gap-4">
-        <Button className="cursor-pointer" onClick={handleAnonymousLogin}>
-          Sign in as demo user
-        </Button>
+        <Button onClick={handleEmailLogin}>Sign in as demo user</Button>
       </div>
     </div>
   );
