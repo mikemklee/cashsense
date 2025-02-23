@@ -3,6 +3,7 @@ import { Session, SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "database.types";
 import { useEffect } from "react";
+import { Button } from "./ui/button";
 
 export default function Login() {
   const { supabase, session } = useOutletContext<{
@@ -17,15 +18,8 @@ export default function Login() {
     }
   }, [session, navigate]);
 
-  const handleEmailLogin = async () => {
-    await supabase.auth.signInWithPassword({
-      email: "valid.email@supabase.io",
-      password: "password",
-    });
-  };
-
   const handleAnonymousLogin = async () => {
-    const { data, error } = await supabase.auth.signInAnonymously();
+    const { error } = await supabase.auth.signInAnonymously();
 
     if (!error) {
       navigate("/");
@@ -36,18 +30,9 @@ export default function Login() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <button
-        className="border border-gray-200 rounded-md"
-        onClick={handleEmailLogin}
-      >
-        Email Login
-      </button>
-      <button
-        className="border border-gray-200 rounded-md"
-        onClick={handleAnonymousLogin}
-      >
+      <Button className="cursor-pointer" onClick={handleAnonymousLogin}>
         Anonymous login
-      </button>
+      </Button>
     </div>
   );
 }
