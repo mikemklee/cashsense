@@ -1,12 +1,15 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSubmit } from "@remix-run/react";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { Account } from "types/account";
 import { Category } from "types/category";
 import { Transaction } from "types/transaction";
 import Main from "~/components/ui/main";
 import AccountList from "~/components/views/account-list";
-import { AddTransaction } from "~/components/views/add-transaction";
+import {
+  AddTransaction,
+  AddTransactionPayload,
+} from "~/components/views/add-transaction";
 import CategoryList from "~/components/views/category-list";
 import TransactionList from "~/components/views/transaction-list";
 
@@ -95,6 +98,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { transactions, accounts, categories } = useLoaderData<typeof loader>();
+  const submit = useSubmit();
+
+  const handleCreateTransaction = async (payload: AddTransactionPayload) => {
+    submit(payload, {
+      method: "POST",
+      action: "/transactions",
+      encType: "application/json",
+    });
+  };
 
   return (
     <Main>
@@ -102,7 +114,7 @@ export default function Index() {
       <CategoryList categories={categories} />
       <div className="flex justify-between items-center pt-8 pb-2">
         <h1>Recent transactions</h1>
-        <AddTransaction />
+        <AddTransaction onSubmit={handleCreateTransaction} />
       </div>
       <TransactionList transactions={transactions} />
     </Main>

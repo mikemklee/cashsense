@@ -14,12 +14,21 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-export function AddTransaction() {
+export type AddTransactionPayload = {
+  amount: number;
+  description: string;
+};
+
+type Props = {
+  onSubmit: (payload: AddTransactionPayload) => void;
+};
+
+export function AddTransaction({ onSubmit }: Props) {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
 
-  const onSubmit = () => {
-    console.log({ name: amount, username: description });
+  const handleSubmit = () => {
+    onSubmit({ amount: parseInt(amount), description });
   };
 
   return (
@@ -65,7 +74,7 @@ export function AddTransaction() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={onSubmit}>
+          <Button type="submit" onClick={handleSubmit}>
             Save
           </Button>
         </DialogFooter>
