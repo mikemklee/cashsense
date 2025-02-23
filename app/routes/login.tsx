@@ -1,7 +1,17 @@
-import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
-import { createServerClient } from "@supabase/auth-helpers-remix";
+import type {
+  ActionFunctionArgs,
+  MetaFunction,
+  Session,
+} from "@remix-run/node";
+import { useNavigate, useOutletContext } from "@remix-run/react";
+import {
+  createServerClient,
+  SupabaseClient,
+} from "@supabase/auth-helpers-remix";
+import type { Database } from "database.types";
+import { useEffect } from "react";
 
-import Login from "../components/login";
+import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,9 +44,35 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Index() {
+  const { supabase, session } = useOutletContext<{
+    supabase: SupabaseClient<Database>;
+    session: Session | null;
+  }>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
+
+  const handleAnonymousLogin = async () => {
+    const { error } = await supabase.auth.signInAnonymously();
+
+    if (!error) {
+      navigate("/");
+    } else {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex h-screen items-center justify-center">
-      <Login />
+      <div className="flex flex-col items-center gap-4">
+        <Button className="cursor-pointer" onClick={handleAnonymousLogin}>
+          Anonymous login
+        </Button>
+      </div>
     </div>
   );
 }
