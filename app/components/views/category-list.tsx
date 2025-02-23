@@ -1,4 +1,5 @@
 import { Category } from "types/category";
+import { AddCategory } from "./add-category";
 
 export default function CategoryList({
   categories = [],
@@ -10,7 +11,8 @@ export default function CategoryList({
       <div className="flex justify-between items-center pt-8 pb-2">
         <h1>Categories</h1>
       </div>
-      <div className="flex">
+      <div className="flex gap-4 flex-wrap">
+        <AddCategory />
         {categories.map((category) => (
           <CategoryTag key={category.id} category={category} />
         ))}

@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useMemo } from "react";
 
 import { Account } from "types/account";
+import { Category } from "types/category";
 import { DataTable } from "../ui/data-table";
 
 export type Transaction = {
@@ -14,6 +15,7 @@ export type Transaction = {
   amount: number;
   description: string;
   account?: Account;
+  category?: Category;
 };
 
 export type Props = {
@@ -57,6 +59,25 @@ export default function TransactionList({ transactions = [] }: Props) {
                 alt={account.name}
               />
               <span>{account.name}</span>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "category",
+        header: () => <div className="text-right">Category</div>,
+        cell: ({ row }) => {
+          const rawCategory = row.getValue("category");
+
+          const category = rawCategory as Category;
+
+          return (
+            <div className="flex items-center gap-x-2 justify-end">
+              <span
+                className="w-1.5 h-4 rounded-sm"
+                style={{ backgroundColor: category.color }}
+              />
+              <span>{category.name}</span>
             </div>
           );
         },

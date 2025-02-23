@@ -55,6 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           imageUrl: t.account.image_url,
         } as Account)
       : undefined,
+    category: t.category as Category,
   }));
 
   ({ data, error } = await supabase.from("accounts").select("*"));
