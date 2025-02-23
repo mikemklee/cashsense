@@ -1,17 +1,21 @@
 import { Account } from "types/account";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { AddAccount, AddAccountPayload } from "./add-account";
 
 export default function AccountList({
   accounts = [],
+  handleAddAccount,
 }: {
   accounts: Account[];
+  handleAddAccount: (payload: AddAccountPayload) => void;
 }) {
   return (
     <>
       <div className="flex justify-between items-center pt-4 pb-2">
         <h1>Accounts</h1>
       </div>
-      <div className="flex">
+      <div className="flex gap-4">
+        <AddAccount onSubmit={handleAddAccount} />
         {accounts.map((account) => (
           <AccountCard key={account.id} account={account} />
         ))}
