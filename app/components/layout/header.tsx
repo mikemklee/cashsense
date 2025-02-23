@@ -31,10 +31,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 function Header() {
-  const { session } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
   const submit = useSubmit();
 
-  if (!session) return null;
+  if (!loaderData?.session) return null;
 
   return (
     <div className="flex gap-4 py-3 items-center border-b border-gray-700">

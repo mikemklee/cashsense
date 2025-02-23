@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { useMemo } from "react";
 
-import { Account } from "@/routes/accounts";
+import { Account } from "types/account";
 import { DataTable } from "../ui/data-table";
 
 export type Transaction = {
@@ -27,7 +27,8 @@ export default function TransactionList({ transactions = [] }: Props) {
         accessorKey: "postedAt",
         header: "Date",
         cell: ({ row }) => {
-          const date = row.getValue<Date>("postedAt");
+          const rawDate = row.getValue<Date>("postedAt");
+          const date = new Date(rawDate);
 
           const timeMs = date.getTime();
           const tzOffsetMs = date.getTimezoneOffset() * 60 * 1000;
@@ -51,7 +52,7 @@ export default function TransactionList({ transactions = [] }: Props) {
           return (
             <div className="flex items-center gap-2 justify-end">
               <img
-                className="rounded-full w-4 h-4"
+                className="rounded-xs w-5 h-5"
                 src={account.imageUrl}
                 alt={account.name}
               />
@@ -74,7 +75,9 @@ export default function TransactionList({ transactions = [] }: Props) {
 
           return (
             <div
-              className={`text-right font-medium ${amount < 0 ? "text-red-400/90" : "text-green-400/90"}`}
+              className={`text-right font-medium ${
+                amount < 0 ? "text-red-400/90" : "text-green-400/90"
+              }`}
             >
               {formatted}
             </div>
