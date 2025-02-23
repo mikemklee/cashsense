@@ -2,9 +2,12 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { Account } from "types/account";
+import { Category } from "types/category";
 import { Transaction } from "types/transaction";
 import Main from "~/components/ui/main";
+import AccountList from "~/components/views/account-list";
 import { AddTransaction } from "~/components/views/add-transaction";
+import CategoryList from "~/components/views/category-list";
 import TransactionList from "~/components/views/transaction-list";
 
 export const meta: MetaFunction = () => {
@@ -26,7 +29,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
   );
 
-  const { data, error } = await supabase.from("transactions").select(`
+  let { data, error } = await supabase.from("transactions").select(`
     *,
     account:accounts (id, name, image_url),
     category:categories (id, name, color)
@@ -36,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return Response.json("Failed to fetch transactions", { status: 500 });
   }
 
-  const formatted: Transaction[] = data.map((t) => ({
+  const formattedTransactions: Transaction[] = data.map((t) => ({
     id: t.id,
     createdAt: new Date(t.created_at),
     postedAt: new Date(t.posted_at),
@@ -51,9 +54,38 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       : undefined,
   }));
 
+  ({ data, error } = await supabase.from("accounts").select("*"));
+
+  if (!data || error) {
+    return Response.json("Failed to fetch accounts", { status: 500 });
+  }
+
+  const formattedAccounts: Account[] = data.map((el) => ({
+    id: el.id,
+    createdAt: new Date(el.created_at),
+    name: el.name,
+    type: el.type,
+    imageUrl: el.image_url,
+  }));
+
+  ({ data, error } = await supabase.from("categories").select("*"));
+
+  if (!data || error) {
+    return Response.json("Failed to fetch categories", { status: 500 });
+  }
+
+  const formattedCategories: Category[] = data.map((el) => ({
+    id: el.id,
+    createdAt: new Date(el.created_at),
+    name: el.name,
+    color: el.color,
+  }));
+
   return Response.json(
     {
-      transactions: formatted,
+      transactions: formattedTransactions,
+      accounts: formattedAccounts,
+      categories: formattedCategories,
     },
     {
       headers: response.headers,
@@ -62,28 +94,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function Index() {
-  const { transactions } = useLoaderData<typeof loader>();
+  const { transactions, accounts, categories } = useLoaderData<typeof loader>();
 
   return (
     <Main>
-      {/* <div className="flex justify-between items-center pt-4 pb-2">
-        <h1>Accounts</h1>
-      </div>
-      <div className="flex">
-        {accounts.map((account) => (
-          <AccountCard key={account.id} account={account} />
-        ))}
-      </div>
-
-      <div className="flex justify-between items-center pt-8 pb-2">
-        <h1>Categories</h1>
-      </div>
-      <div className="flex">
-        {categories.map((category) => (
-          <CategoryTag key={category.id} category={category} />
-        ))}
-      </div> */}
-
+      <AccountList accounts={accounts} />
+      <CategoryList categories={categories} />
       <div className="flex justify-between items-center pt-8 pb-2">
         <h1>Recent transactions</h1>
         <AddTransaction />

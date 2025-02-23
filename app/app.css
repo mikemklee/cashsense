@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Monomaniac+One&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Capriola&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Monomaniac+One&family=Noto+Sans+KR:wght@100..900&display=swap");
 
 @import "tailwindcss";
 
@@ -106,7 +105,8 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Capriola", serif;
+    font-family: "Noto Sans KR", serif;
+    font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
     color-scheme: dark;

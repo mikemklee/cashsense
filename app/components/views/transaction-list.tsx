@@ -52,7 +52,7 @@ export default function TransactionList({ transactions = [] }: Props) {
           return (
             <div className="flex items-center gap-2 justify-end">
               <img
-                className="rounded-xs w-5 h-5"
+                className="rounded-sm w-5 h-5"
                 src={account.imageUrl}
                 alt={account.name}
               />
