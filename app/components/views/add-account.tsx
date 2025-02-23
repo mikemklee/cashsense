@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import { useSubmit } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -27,20 +28,27 @@ export type AddAccountPayload = {
   type: string;
 };
 
-type Props = {
-  onSubmit: (payload: AddAccountPayload) => void;
-};
-
-export function AddAccount({ onSubmit }: Props) {
+export function AddAccount() {
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [type, setType] = useState("");
+  const submit = useSubmit();
 
   const handleSubmit = () => {
-    onSubmit({ name, type });
+    submit(
+      { name, type },
+      {
+        method: "POST",
+        action: "/accounts",
+        encType: "application/json",
+      }
+    );
+
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Card className="w-12 bg-card-foreground/3 border border-card-foreground/10 flex items-center justify-center cursor-pointer group">
           <Plus className="opacity-30 group-hover:opacity-100 transition-opacity" />

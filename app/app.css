@@ -112,3 +112,11 @@ body {
     color-scheme: dark;
   }
 }
+
+/* Apply horizontal padding of 25px when the viewport width is below 600px */
+@media (max-width: 600px) {
+  body {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}

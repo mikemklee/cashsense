@@ -6,7 +6,6 @@ import { Category } from "types/category";
 import { Transaction } from "types/transaction";
 import Main from "~/components/ui/main";
 import AccountList from "~/components/views/account-list";
-import { AddAccountPayload } from "~/components/views/add-account";
 import {
   AddTransaction,
   AddTransactionPayload,
@@ -109,17 +108,9 @@ export default function Index() {
     });
   };
 
-  const handleAddAccount = async (payload: AddAccountPayload) => {
-    submit(payload, {
-      method: "POST",
-      action: "/accounts",
-      encType: "application/json",
-    });
-  };
-
   return (
     <Main>
-      <AccountList accounts={accounts} handleAddAccount={handleAddAccount} />
+      <AccountList accounts={accounts} />
       <CategoryList categories={categories} />
       <div className="flex justify-between items-center pt-8 pb-2">
         <h1>Recent transactions</h1>

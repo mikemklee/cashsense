@@ -1,21 +1,20 @@
+import { CreditCard, Landmark } from "lucide-react";
 import { Account } from "types/account";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { AddAccount, AddAccountPayload } from "./add-account";
+import { AddAccount } from "./add-account";
 
 export default function AccountList({
   accounts = [],
-  handleAddAccount,
 }: {
   accounts: Account[];
-  handleAddAccount: (payload: AddAccountPayload) => void;
 }) {
   return (
     <>
       <div className="flex justify-between items-center pt-4 pb-2">
         <h1>Accounts</h1>
       </div>
-      <div className="flex gap-4">
-        <AddAccount onSubmit={handleAddAccount} />
+      <div className="flex gap-4 flex-wrap">
+        <AddAccount />
         {accounts.map((account) => (
           <AccountCard key={account.id} account={account} />
         ))}
@@ -29,14 +28,20 @@ export function AccountCard({ account }: { account: Account }) {
     account.type === "bank_account" ? "Bank account" : "Credit card";
 
   return (
-    <Card className="w-48 bg-card-foreground/3 border border-card-foreground/10">
+    <Card className="w-40 bg-card-foreground/3 border border-card-foreground/10">
       <CardHeader>
         <div className="relative flex items-center gap-4">
-          <img
-            className="rounded-sm w-8 h-8"
-            src={account.imageUrl}
-            alt={account.name}
-          />
+          {account.imageUrl ? (
+            <img
+              className="rounded-sm w-8 h-8"
+              src={account.imageUrl}
+              alt={account.name}
+            />
+          ) : account.type === "bank_account" ? (
+            <Landmark />
+          ) : (
+            <CreditCard />
+          )}
           <div>
             <CardTitle>{account.name}</CardTitle>
             <CardDescription>{formattedType}</CardDescription>
