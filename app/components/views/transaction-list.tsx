@@ -44,15 +44,35 @@ export default function TransactionList({ transactions = [] }: Props) {
         header: "Description",
       },
       {
+        accessorKey: "category",
+        header: () => <div className="text-left">Category</div>,
+        cell: ({ row }) => {
+          const rawCategory = row.getValue("category");
+
+          const category = rawCategory as Category;
+
+          return (
+            <div className="flex items-center gap-x-2 justify-start">
+              <span
+                className="w-1.5 h-4 rounded-sm"
+                style={{ backgroundColor: category.color }}
+              />
+              <span>{category.name}</span>
+            </div>
+          );
+        },
+      },
+
+      {
         accessorKey: "account",
-        header: () => <div className="text-right">Account</div>,
+        header: () => <div className="text-left">Account</div>,
         cell: ({ row }) => {
           const rawAccount = row.getValue("account");
 
           const account = rawAccount as Account;
 
           return (
-            <div className="flex items-center gap-2 justify-end">
+            <div className="flex items-center gap-2 justify-start">
               <img
                 className="rounded-sm w-5 h-5"
                 src={account.imageUrl}
@@ -63,25 +83,7 @@ export default function TransactionList({ transactions = [] }: Props) {
           );
         },
       },
-      {
-        accessorKey: "category",
-        header: () => <div className="text-right">Category</div>,
-        cell: ({ row }) => {
-          const rawCategory = row.getValue("category");
 
-          const category = rawCategory as Category;
-
-          return (
-            <div className="flex items-center gap-x-2 justify-end">
-              <span
-                className="w-1.5 h-4 rounded-sm"
-                style={{ backgroundColor: category.color }}
-              />
-              <span>{category.name}</span>
-            </div>
-          );
-        },
-      },
       {
         accessorKey: "amount",
         header: () => <div className="text-right">Amount</div>,

@@ -32,11 +32,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
   );
 
-  let { data, error } = await supabase.from("transactions").select(`
+  let { data, error } = await supabase
+    .from("transactions")
+    .select(
+      `
     *,
     account:accounts (id, name, image_url),
     category:categories (id, name, color)
-    `);
+    `
+    )
+    .order("posted_at", { ascending: false });
 
   if (!data || error) {
     return Response.json("Failed to fetch transactions", { status: 500 });

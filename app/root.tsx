@@ -93,7 +93,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className="flex flex-col h-screen mx-auto max-w-xl">
+        <div className="flex flex-col h-screen mx-auto max-w-2xl">
           <Header />
           {children}
         </div>
