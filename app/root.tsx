@@ -54,10 +54,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     data: { session },
   } = await supabase.auth.getSession();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return Response.json(
     {
       env,
-      session,
+      serverAccessToken: session?.access_token,
+      user,
     },
     {
       headers: response.headers,
@@ -87,15 +92,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { env, session } = useLoaderData<typeof loader>();
+  const { env, serverAccessToken, user } = useLoaderData<typeof loader>();
   const { revalidate } = useRevalidator();
   const navigate = useNavigate();
 
   const [supabase] = useState(() =>
     createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
   );
-
-  const serverAccessToken = session?.access_token;
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -123,14 +126,14 @@ export default function App() {
   }, [serverAccessToken, supabase, revalidate]);
 
   useEffect(() => {
-    if (!session) {
+    if (!user) {
       navigate("/login");
     }
-  }, [session, navigate]);
+  }, [user, navigate]);
 
   return (
     <>
-      <Outlet context={{ supabase, session }} />
+      <Outlet context={{ supabase, user }} />
     </>
   );
 }

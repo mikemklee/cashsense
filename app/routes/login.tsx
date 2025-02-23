@@ -1,12 +1,9 @@
-import type {
-  ActionFunctionArgs,
-  MetaFunction,
-  Session,
-} from "@remix-run/node";
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useNavigate, useOutletContext } from "@remix-run/react";
 import {
   createServerClient,
   SupabaseClient,
+  User,
 } from "@supabase/auth-helpers-remix";
 import type { Database } from "database.types";
 import { PiggyBank } from "lucide-react";
@@ -45,17 +42,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Index() {
-  const { supabase, session } = useOutletContext<{
+  const { supabase, user } = useOutletContext<{
     supabase: SupabaseClient<Database>;
-    session: Session | null;
+    user: User | null;
   }>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (session) {
+    if (user) {
       navigate("/");
     }
-  }, [session, navigate]);
+  }, [user, navigate]);
 
   const handleAnonymousLogin = async () => {
     const { error } = await supabase.auth.signInAnonymously();

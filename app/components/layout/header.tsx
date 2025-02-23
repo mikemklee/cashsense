@@ -17,12 +17,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   );
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return Response.json(
     {
-      session,
+      user,
     },
     {
       headers: response.headers,
@@ -34,7 +34,7 @@ function Header() {
   const loaderData = useLoaderData<typeof loader>();
   const submit = useSubmit();
 
-  if (!loaderData?.session) return null;
+  if (!loaderData?.user) return null;
 
   return (
     <div className="flex gap-4 py-3 items-center border-b border-gray-700">
